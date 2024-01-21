@@ -1,0 +1,25 @@
+# Nodejs
+node_modules/
+
+# Environment variables
+.env
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Clojure cache
+.cpcache/
+
+# nREPL
+.joyride/.nrepl-port
+.nrepl-port
+
+# Calva
+.clj-kondo/.cache/
+.lsp/.cache/
+.lsp/sqlite*.db
+.calva/output-window/
+
+# VS Code test-electron
+.vscode-test/

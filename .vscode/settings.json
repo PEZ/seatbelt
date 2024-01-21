@@ -1,0 +1,42 @@
+{
+  "terminal.integrated.enableBell": true,
+  "calva.projectRootsSearchExclude": [
+    "bower_components",
+    ".bzr",
+    ".cache",
+    ".ccls-cache",
+    ".clangd",
+    ".classpath",
+    "*.code-search",
+    ".cpcache",
+    "_darcs",
+    ".DS_Store",
+    ".ensime_cache",
+    ".eunit",
+    "flow-typed",
+    "_FOSSIL_",
+    ".fslckout",
+    ".git",
+    ".hg",
+    ".idea",
+    ".joyride",
+    "node_modules",
+    ".pijul",
+    ".project",
+    ".shadow-cljs",
+    ".stack-work",
+    ".svn",
+    "target",
+    ".tox",
+    ".vscode",
+    ".vscode-test"
+  ],
+  "calva.customREPLCommandSnippets": [
+    {
+      "name": "Run all Backseat Driver tests",
+      "key": "t",
+      "repl": "cljs",
+      "snippet": "(require 'clojure.test) (clojure.test/run-all-tests #\"test[.].*backseat-driver[.].*\")"
+    },
+  ]
+}
