@@ -1,0 +1,1 @@
+{:lint-as {seatbelt.macros/deftest-async clojure.test/deftest}}
