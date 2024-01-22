@@ -71,7 +71,7 @@ It will depend on wether you are using the test runner for your User scripts or 
 
 ## Projects using Seatbelt
 
-Even though Seatbelt is newly published as a standalone project, versions of it has been in use for quite some time in:
+Even though Seatbelt is newly published as a standalone project, versions of it has been in use for quite some time:
 
 * In Calva it is used for [end-to-end testing](https://github.com/BetterThanTomorrow/calva/tree/published/src/extension-test/e2e-test)
 * Joyride uses it for its [integration tests](https://github.com/BetterThanTomorrow/joyride/tree/master/vscode-test-runner)
