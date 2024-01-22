@@ -26,5 +26,5 @@
 (deftest-async delayed-answer-2
   (testing "Async test example using deftest-async macro"
     (p/let [answer (util/delayed-answer+)]
-      (is (= 42 answer)))))
+      (is (= 41 answer)))))
 
