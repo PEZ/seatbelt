@@ -10,7 +10,7 @@
                            :fail 0
                            :error 0})
 
-(def ^:private !state (atom default-db))
+(defonce ^:private !state (atom default-db))
 
 (defn ^:private init-counters! []
   (swap! !state merge (select-keys default-db [:pass :fail :error])))
@@ -90,7 +90,7 @@
     (if (:ready-to-run? @!state)
       (run-tests-impl!+ test-nss)
       (do
-        (println "seatbelt: " waiting-message)
+        (println "seatbelt:" waiting-message)
         (add-watch !state :runner (fn [k r _o n]
                                        (when (:ready-to-run? n)
                                          (remove-watch r k)
@@ -127,7 +127,6 @@
    (let [relative-path (vscode/workspace.asRelativePath uri)]
      (println reason relative-path)
      (println "Running tests...")
-     (println "BOOM! relative-path:" relative-path)
      (when-not (or (= "." uri)
                     ; We do not handle reloading of the runner itself yet
                    (.endsWith relative-path "seatbelt/runner.cljs"))
