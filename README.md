@@ -7,11 +7,16 @@ A test runner for your [VS Code](https://code.visualstudio.com/) extensions and/
 NB: To take the Seatbelt for a spin you'll need `npm`, `yarn`, or whatever you prefer for installing npm dependencies command line tool.
 
 1. Fork and clone this repo (yes, you want a fork for the [CI example](#run-in-ci) below.)
-1. `npm i`
+1. Install dependencies:
+   ```sh
+   npm i
+   ```
 
 ## A one-off run
 
-1. `npm test`
+```sh
+npm test
+```
 
 This will install a local copy of VS Code (separate from any VS Code you may have installed) and run the few (and silly) example tests in this project. The tests are here: [.joyride/src/test](.joyride/src/test).
 
@@ -23,7 +28,9 @@ The project includes configuration for GitHub Actions.
 1. Change something
 1. Push your changes to your fork
 
-This should run the tests on GitHub.
+This should run the tests on GitHub. You probably will need to enable it on yor fork for this to happen.
+
+![GitHub message: Enable Workflows](images/enable-workflows.png)
 
 ### The Test Watcher
 
@@ -35,11 +42,23 @@ This will start the separate VS Code instance, and it will run the tests and the
 
 2. Save a file to see the test run with success again.
 2. Change some code to make a test fail and save the file to see (and hear) the test run fail.
+   ![Seatbelt watcher output: Failed test run](images/seatbelt-watch-mode.png)
 2. Fix the bug and save again, just for the fun.
 
 ## Using for your projects
 
-1. Copy the [.joyride/src/seatbelt](.joyride/src/seatbelt) folder to the `.joyride/src/` folder of your project. Copy the `scripts` from this project's `package.json` to your projects ditto. Adjust the script names as needed.
+1. Copy the [.joyride/src/seatbelt](.joyride/src/seatbelt) folder to the `.joyride/src/` folder of your project.
+1. Copy the `scripts` from this project's `package.json` to your projects ditto.
+   * Adjust the script names as needed.
+1. You will also need the devDependencies used by Seatbelt: 
+   ```sh 
+   npm i @vscode/test-electron @w72/cross-env --save-dev
+   ``````
+1. Tell Seatbelt when your script is ready to run the tests by calling:
+   ```clojure
+   (seatbelt.runner/ready-to-run-tests! "Workspace activated.")
+   ```
+   (Typically from your `workspace_activate.cljs` script. See [.joyride/scripts/workspace_activate.cljs](.joyride/scripts/workspace_activate.cljs))
 
 ## Install globally
 
@@ -50,9 +69,36 @@ If you use the test runner for your Joyride scripting you probably want to insta
 
 It will depend on wether you are using the test runner for your User scripts or for Workspace scripts what the paths should be. Also, if it is for User scripts, you need to also adjust the `workspace` path towards the bottom of the [src/seatbelt/launcher.js](.joyride/src/seatbelt/launcher.js) script to correctly find the workspace root of your Joyride User scripts.
 
+## Projects using Seatbelt
+
+Even though Seatbelt is newly published as a standalone project, versions of it has been in use for quite some time in:
+
+* In Calva it is used for [end-to-end testing](https://github.com/BetterThanTomorrow/calva/tree/published/src/extension-test/e2e-test)
+* Joyride uses it for its [integration tests](https://github.com/BetterThanTomorrow/joyride/tree/master/vscode-test-runner)
+
+Seatbelt is also used for the new project [Backseat Driver](https://github.com/PEZ/backseat-driver). Since this is a Joyride script, it is used for the [unit testing](https://github.com/PEZ/backseat-driver/tree/master/.joyride/src/seatbelt) (well, very few tests so far, but there's going to be some coverage eventually.). There is nothing stopping us to use it for both integration and e2e tests too, of course. Eventually, eventually.
+
+* Your project here ...
+
 ## Notes
 
-**The `JOYRIDE_HEADLESS` environment variable.** When Seatbelt it should have the `JOYRIDE_HEADLESS` environment variable set. This lets the Joyride scripts prevent running code that shouldn't be run in the test runner. In this repository the variable is set by the `scripts` in [package.json](package.json).
+**The `JOYRIDE_HEADLESS` environment variable.** When Seatbelt runs the tests it should have the `JOYRIDE_HEADLESS` environment variable set. This lets the Joyride scripts under test prevent running code that shouldn't be run by the test runner. In this repository the variable is set by the `scripts` in [package.json](package.json). Here's the relevant example code in [workspace_activate.cljs]() for conditionally requiring a namespace:
+
+```clojure
+(defn- -main []
+  (println "Test Runner Example Workspace: -main called")
+  (if js/process.env.JOYRIDE_HEADLESS
+    (println "HEADLESS TEST RUN: Not Initializing Interactive things.")
+    (do
+      (println "Initializing interactive things...")
+      ; Beware of the Gilardi scenario: https://technomancy.us/143
+      (require '[my.thing])
+      ((resolve 'my.thing/init!))))
+  (seatbelt.runner/ready-to-run-tests! "Workspace activated."))
+
+(when (= (joyride/invoked-script) joyride/*file*)
+  (-main))
+```
 
 You may have noticed that VS Code is not required for taking Seatbelt for some spins. The launcher takes care of installing a local VS Code for running the tests in.
 
