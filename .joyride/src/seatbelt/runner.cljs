@@ -1,5 +1,5 @@
 (ns seatbelt.runner
-  (:require ["vscode" :as vscode] 
+  (:require ["vscode" :as vscode]
             [clojure.string :as string]
             [cljs.test]
             [promesa.core :as p]))
@@ -124,25 +124,29 @@
   ([uri reason]
    (watcher-test-run!+ uri reason nil))
   ([uri reason waiting-message]
-   (println reason (vscode/workspace.asRelativePath uri))
-   (println "Running tests...")
-   (when-not (= "." uri)
-     (require (uri->ns-symbol uri) :reload-all))
-   (-> (run-tests!+ waiting-message)
-       (p/then (fn [_]
-                 (js/setImmediate
-                  #(println "🟢 YAY! 🟢"))))
-       (p/catch (fn [e]
+   (let [relative-path (vscode/workspace.asRelativePath uri)]
+     (println reason relative-path)
+     (println "Running tests...")
+     (println "BOOM! relative-path:" relative-path)
+     (when-not (or (= "." uri)
+                    ; We do not handle reloading of the runner itself yet
+                   (.endsWith relative-path "seatbelt/runner.cljs"))
+       (require (uri->ns-symbol uri) :reload-all))
+     (-> (run-tests!+ waiting-message)
+         (p/then (fn [_]
+                   (js/setImmediate
+                    #(println "🟢 YAY! 🟢"))))
+         (p/catch (fn [e]
                   ; No sound? Check your settings for terminal.integrated.enableBell
-                  (js/setImmediate #(do (println "\u0007")
-                                        (println "🔴 NAY! 🔴" e)))))
-       (p/finally (fn []
-                    (js/setImmediate
-                     #(println "Waiting for changes...")))))))
+                    (js/setImmediate #(do (println "\u0007")
+                                          (println "🔴 NAY! 🔴" e)))))
+         (p/finally (fn []
+                      (js/setImmediate
+                       #(println "Waiting for changes..."))))))))
 
 #_{:clj-kondo/ignore [:clojure-lsp/unused-public-var]}
 (defn watch!+ [waiting-message]
-  (let [glob-pattern "**/.joyride/**/*.cljs"
+  (let [glob-pattern "**/.joyride/**/*.clj[sc]"
         watcher (vscode/workspace.createFileSystemWatcher glob-pattern)]
     (.onDidChange watcher (fn [uri]
                             (watcher-test-run!+ uri "File changed:")))
@@ -153,3 +157,5 @@
     (watcher-test-run!+ "." "Watcher started" waiting-message))
   ; We leave the vscode electron test runner waiting for this promise
   (p/deferred))
+
+(.endsWith ".joyride/src/seatbelt/runner.cljs" "seatbelt/runner.cljs")
