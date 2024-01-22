@@ -1,6 +1,5 @@
 (ns seatbelt.runner
-  (:require ["vscode" :as vscode]
-            ["path" :as path]
+  (:require ["vscode" :as vscode] 
             [clojure.string :as string]
             [cljs.test]
             [promesa.core :as p]))
@@ -101,7 +100,7 @@
 (defn- uri->ns-symbol [uri]
   (-> uri
       (vscode/workspace.asRelativePath)
-      (string/split path/sep)
+      (string/split "/")
       (->> (drop 2)
            (string/join "."))
       (string/replace "_" "-")
