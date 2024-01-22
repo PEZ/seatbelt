@@ -2,7 +2,7 @@
 
 A test runner for your [VS Code](https://code.visualstudio.com/) extensions and/or [Joyride](https://marketplace.visualstudio.com/items?itemName=betterthantomorrow.joyride) scripts. Seatbelt is itself a Joyride script and thus runs in VS Code ([@vscode/test-electron](https://www.npmjs.com/package/@vscode/test-electron) to be precise). It supports both one-off runs, e.g. for CI, and running as a watcher on file system changes.
 
-## Installation
+## Try it (takes less than a minute)
 
 NB: To take the Seatbelt for a spin you'll need `npm`, `yarn`, or whatever you prefer for installing npm dependencies command line tool.
 
@@ -12,7 +12,7 @@ NB: To take the Seatbelt for a spin you'll need `npm`, `yarn`, or whatever you p
    npm i
    ```
 
-## A one-off run
+### A one-off run
 
 ```sh
 npm test
@@ -81,6 +81,8 @@ Seatbelt is also used for the new project [Backseat Driver](https://github.com/P
 * Your project here ...
 
 ## Notes
+
+Currently the test runner finds and runs tests in the `.joyride/src/test/` directory, named `something_test.cljs` (also `.cljc`). If you need something else, just hack the glob used in `runner.cljs`.
 
 **The `JOYRIDE_HEADLESS` environment variable.** When Seatbelt runs the tests it should have the `JOYRIDE_HEADLESS` environment variable set. This lets the Joyride scripts under test prevent running code that shouldn't be run by the test runner. In this repository the variable is set by the `scripts` in [package.json](package.json). Here's the relevant example code in [workspace_activate.cljs]() for conditionally requiring a namespace:
 
