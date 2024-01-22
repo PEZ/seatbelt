@@ -157,5 +157,3 @@
     (watcher-test-run!+ "." "Watcher started" waiting-message))
   ; We leave the vscode electron test runner waiting for this promise
   (p/deferred))
-
-(.endsWith ".joyride/src/seatbelt/runner.cljs" "seatbelt/runner.cljs")
