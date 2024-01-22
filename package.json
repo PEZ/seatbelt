@@ -3,15 +3,14 @@
   "version": "1.0.0",
   "description": "A Joyride test runner",
   "scripts": {
-    "test": "JOYRIDE_HEADLESS=true node .joyride/src/seatbelt/launcher.js",
-    "watch-tests": "JOYRIDE_HEADLESS=true node .joyride/src/seatbelt/launcher.js --watch"
+    "test": "cross-env JOYRIDE_HEADLESS=true node .joyride/src/seatbelt/launcher.js",
+    "watch-tests": "cross-env JOYRIDE_HEADLESS=true node .joyride/src/seatbelt/launcher.js --watch"
   },
   "keywords": [],
   "author": "pez@pezius.com",
   "license": "MIT",
-  "dependencies": {
-  },
   "devDependencies": {
-    "@vscode/test-electron": "^2.3.8"
+    "@vscode/test-electron": "^2.3.8",
+    "@w72/cross-env": "^1.0.2"
   }
 }
